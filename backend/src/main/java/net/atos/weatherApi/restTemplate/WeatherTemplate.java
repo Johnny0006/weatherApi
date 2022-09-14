@@ -22,7 +22,6 @@ import lombok.Setter;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import net.atos.weatherApi.entity.City;
-import net.atos.weatherApi.entity.Weather;
 import net.bytebuddy.asm.Advice.This;
 import net.bytebuddy.utility.dispatcher.JavaDispatcher.IsConstructor;
 
@@ -44,12 +43,12 @@ public class WeatherTemplate {
 				.replaceFirst("\\{lon\\}", String.valueOf(city.getLon()))
 				.replaceFirst("\\{API key\\}", KEY);
 		
-		System.out.println(url);
+		
 		
 		ResponseEntity<String> response = template.getForEntity(url, String.class);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(response.getBody());
+		log.info(response.getBody());
 		
 		
 		Weather weather;
@@ -70,11 +69,11 @@ public class WeatherTemplate {
 	
 	@Value("${api.openweathermap.key}")
 	private void setKey(String key) {
-		this.KEY=key;
+		WeatherTemplate.KEY=key;
 	}
 	
 	@Value("${api.openweathermap.url}")
 	private void setUrl(String url) {
-		this.URL=url;
+		WeatherTemplate.URL=url;
 	}
 }

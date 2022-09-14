@@ -41,5 +41,4 @@ public class City extends RepresentationModel<City>{
 	private double lon;
 
 	
-	
 }

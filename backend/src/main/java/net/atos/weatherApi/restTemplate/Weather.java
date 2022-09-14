@@ -1,4 +1,4 @@
-package net.atos.weatherApi.entity;
+package net.atos.weatherApi.restTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

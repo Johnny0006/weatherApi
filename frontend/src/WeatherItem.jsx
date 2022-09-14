@@ -8,7 +8,7 @@ export class WeatherItem extends React.Component{
             <div>
                 <li>{this.props.cityName}</li>
                 <ul>
-                    <div id="icon"><img id="wicon" src={src}/></div>
+                    <div id="icon"><img id="wicon" src={src} alt=""/></div>
                     <li>weather: {this.props.desc}</li>
                     <li>temperature: {this.props.temp}</li>
                 </ul>
