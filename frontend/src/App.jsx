@@ -1,6 +1,7 @@
 import * as React from "react";
-import { CitiesList } from "./CitiesList";
-import { WeathersList } from "./WeathersList";
+import { CityPage } from "./CityPage";
+import { WeatherPage } from "./WeatherPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export class App extends React.Component {
   
@@ -17,7 +18,7 @@ export class App extends React.Component {
   
     componentDidMount() {
       console.log('I was triggered during componentDidMount')
-      fetch("http://localhost:8080/api" ,{mode: 'cors'})
+      fetch("http://localhost:8080/api/cities" ,{mode: 'cors'})
         .then(res => res.json())
         .then(json => this.setState({ cities: json }));
         console.log('fetched '+ this.state.cities)
@@ -25,7 +26,7 @@ export class App extends React.Component {
 
     handleChange(event){
       let isSelected = event.currentTarget.checked;
-      let name = event.currentTarget.name
+      let name = Number(event.currentTarget.name)
       console.log(isSelected)
       console.log(name)
       if(isSelected){
@@ -37,17 +38,17 @@ export class App extends React.Component {
     }
 
     handleClick = async () => {
+      this.setState({weathers: []})
       try {
          console.log(JSON.stringify(this.state.selected))
-
-        const response = await fetch("http://localhost:8080/api", {
-          method: 'POST',
+         console.log("http://localhost:8080/api/"+this.state.selected)
+        const response = await fetch("http://localhost:8080/api/" + this.state.selected, {
+          method: 'GET',
           mode: 'cors',
-          body: JSON.stringify(this.state.selected),
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-          },
+          }
         });
         
       
@@ -74,19 +75,12 @@ export class App extends React.Component {
         console.log(this.state.selected)
         return (
           <>
-            <div>
-              <main className="ui main text container">
-                {cities ? <CitiesList cities={cities} selected={this.state.selected} handleChange={this.handleChange}/> : 'Loading…'}
-              </main>
-            </div>
-            <div>
-              <button onClick={this.handleClick}>Get weathers</button>
-            </div>
-            <div>
-              <main>
-                {weathers ? <WeathersList weathers={weathers}/> : 'Waiting for request'}
-              </main>
-            </div>
+            <BrowserRouter>
+              <Routes>
+                  <Route index element={<CityPage cities={cities} selected={this.state.selected} handleChange={this.handleChange} handleClick = {this.handleClick}/>} />
+                  <Route path="weathers" element={<WeatherPage weathers={weathers}/>} />
+              </Routes>
+            </BrowserRouter>
           </>
         );
       }

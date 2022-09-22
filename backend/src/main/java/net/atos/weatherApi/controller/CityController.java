@@ -41,7 +41,7 @@ public class CityController {
 	}
 	
 	
-	@GetMapping
+	@GetMapping("/cities")
 	public ResponseEntity<List<City>> findAll(){
 		
 		List<City> cities = service.findAll();
@@ -52,13 +52,13 @@ public class CityController {
 
 	}
 	
-	@PostMapping
-	public ResponseEntity<List<Weather>> post(@RequestBody List<String> cityNames) throws TimeoutException{
+	@GetMapping("/{cityIdList}")
+	public ResponseEntity<List<Weather>> getWeathers(@PathVariable List<Integer> cityIdList) throws TimeoutException{
 		
 	
 		List<Weather> list = new ArrayList<>();
-		for(String name : cityNames) {
-			Optional<City> city = service.find(name);
+		for(Integer i : cityIdList) {
+			Optional<City> city = service.find(i);
 			if(city.isPresent())
 				list.add(WeatherTemplate.getWeather(city.get()));
 		}
@@ -67,12 +67,12 @@ public class CityController {
 		return ResponseEntity.ok().body(list);
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Weather> find(@PathVariable long id) throws TimeoutException{
-		Optional<City> city = service.find(id);
-		if(city.isEmpty()) return ResponseEntity.notFound().build();
-		else return ResponseEntity.ok(WeatherTemplate.getWeather(city.get()));
-	}
+//	@GetMapping("/{id}")
+//	public ResponseEntity<Weather> find(@PathVariable long id) throws TimeoutException{
+//		Optional<City> city = service.find(id);
+//		if(city.isEmpty()) return ResponseEntity.notFound().build();
+//		else return ResponseEntity.ok(WeatherTemplate.getWeather(city.get()));
+//	}
 	
 	
 }
