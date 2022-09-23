@@ -1,6 +1,6 @@
 import * as React from "react";
-import { CityPage } from "./CityPage";
-import { WeatherPage } from "./WeatherPage";
+import { CityPage } from "./city/CityPage";
+import { WeatherPage } from "./weather/WeatherPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export class App extends React.Component {
