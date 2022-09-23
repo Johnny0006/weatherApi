@@ -35,11 +35,13 @@ public class WeatherEndpoint implements Weather {
 	@ResponsePayload
 	public GetWeatherResponse getWeatherOperation(@RequestPayload GetWeather parameters) throws GetWeatherFaultMessage {
 		try {
-			net.atos.weatherApi.restTemplate.Weather weather = WeatherTemplate.getWeather(cityService.findByNameAndId(parameters.getCityName(),parameters.getId()).get());
+			log.info(String.valueOf(parameters.getCorrelationId()));
+			net.atos.weatherApi.restTemplate.Weather weather = WeatherTemplate.getWeather(cityService.find(parameters.getCityName()).get());
 			GetWeatherResponse response = new GetWeatherResponse();
 			response.setTemp(weather.getTemp());
 			response.setDesc(weather.getWeather());
-			log.info(String.valueOf(response.getTemp())+" "+response.getDesc());
+			response.setCorrelationId(parameters.getCorrelationId());
+			log.info(String.valueOf(response.getTemp())+" "+response.getDesc()+" "+response.getCorrelationId());
 			return response;
 		} catch (Exception e) {
 			GetWeatherFault gFault = new GetWeatherFault();

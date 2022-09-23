@@ -27,12 +27,9 @@ public class CityService {
 	}
 	
 	public Optional<City> find(String name) {
-		return repository.findByName(name);
+		return repository.findByNameIgnoreCase(name);
 	}
 	
-	public Optional<City> findByNameAndId(String name, long id){
-		return repository.findByNameIgnoreCaseAndId(name,id);
-	}
 	
 	public List<City> findAll() {
 		return repository.findAll();
