@@ -18,7 +18,7 @@ export class App extends React.Component {
   
     componentDidMount() {
       console.log('I was triggered during componentDidMount')
-      fetch("http://localhost:8080/api/cities" ,{mode: 'cors'})
+      fetch("http://localhost:8080/api/rest/cities" ,{mode: 'cors'})
         .then(res => res.json())
         .then(json => this.setState({ cities: json }));
         console.log('fetched '+ this.state.cities)
@@ -41,8 +41,8 @@ export class App extends React.Component {
       this.setState({weathers: []})
       try {
          console.log(JSON.stringify(this.state.selected))
-         console.log("http://localhost:8080/api/"+this.state.selected)
-        const response = await fetch("http://localhost:8080/api/" + this.state.selected, {
+         console.log("http://localhost:8080/api/rest/"+this.state.selected)
+        const response = await fetch("http://localhost:8080/api/rest/" + this.state.selected, {
           method: 'GET',
           mode: 'cors',
           headers: {

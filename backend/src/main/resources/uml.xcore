@@ -1,0 +1,59 @@
+@startuml
+participant externalSystem
+participant weatherEndpoint
+participant fault
+participant response
+participant parameters
+participant cityService
+participant cityRepository
+database database
+participant weatherTemplate
+participant mapper
+participant weather
+participant openWeatherApi
+
+externalSystem -> weatherEndpoint : getWeatherOperation(:GetWeather):GetWeatherResponse
+weatherEndpoint -> parameters : getCityName():String
+parameters --> weatherEndpoint : String
+weatherEndpoint -> parameters : getId():long
+parameters --> weatherEndpoint : long
+weatherEndpoint -> cityService : findByCityNameAndId(:String :long):City
+cityService -> cityRepository : findByCityNameAndId(:String :long):City
+cityRepository -> database: query
+alt Found
+	database --> cityRepository : City
+	cityRepository --> cityService : City
+	cityService --> weatherEndpoint : City
+	weatherEndpoint -> weatherTemplate : getWeather(:City):Weather
+	weatherTemplate -> openWeatherApi : GET
+	alt Ok
+		openWeatherApi --> weatherTemplate : ResponseEntity<String>
+		create mapper
+		weatherTemplate -> mapper : readValue(:String :Class<T>):T
+		create weather
+		mapper -> weather : new()
+		weather --> mapper : Weather
+		mapper --> weatherTemplate : Weather
+		weatherTemplate --> weatherEndpoint : Weather
+		create response
+		weatherEndpoint -> response : new(:Weather)
+		response --> weatherEndpoint : GetWeatherResponse
+		weatherEndpoint -->externalSystem : GetWeatherResponse
+	else Error
+		openWeatherApi --> weatherTemplate : null
+		weatherTemplate --> weatherEndpoint : Exception
+		create fault
+		weatherEndpoint -> fault : new()
+		fault --> weatherEndpoint : GetWeatherFaultMessage
+		weatherEndpoint --> externalSystem : GetWeatherFaultMessage
+	end
+else Not Found
+	database --> cityRepository : null
+	cityRepository --> cityService : null
+	cityService --> weatherEndpoint: null
+	create fault
+	weatherEndpoint -> fault : new()
+	fault --> weatherEndpoint : GetWeatherFaultMessage
+	weatherEndpoint --> externalSystem : GetWeatherFaultMessage
+end
+@enduml

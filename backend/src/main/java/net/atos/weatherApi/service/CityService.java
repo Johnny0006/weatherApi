@@ -30,6 +30,10 @@ public class CityService {
 		return repository.findByName(name);
 	}
 	
+	public Optional<City> findByNameAndId(String name, long id){
+		return repository.findByNameIgnoreCaseAndId(name,id);
+	}
+	
 	public List<City> findAll() {
 		return repository.findAll();
 	}
